@@ -53,7 +53,7 @@ Standardtemaer er kun `light` og `dark`. Tilføj `retro` (eller andre) via `them
     target: document.documentElement,
     key: 'site-theme',
     defaultTheme: 'light',
-    themes: ['light', 'dark', 'retro']
+    themes: ['light', 'dark', 'retro', 'golden'],
   });
 </script>
 ```

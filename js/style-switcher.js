@@ -10,12 +10,6 @@
  * - Saves the user's choice in localStorage so it persists on reload.
  * - If there is a <select id="theme-select">, it fills it with options and syncs it automatically.
  * - Sets `data-theme-ready="1"` on <html> after applying the initial theme to help avoid FOUC.
- *
- * Quick start:
- * StyleSwitcher.initStyleSwitcher({ themes: ['light', 'dark', 'retro'] });
- *
- * CSS contract:
- * Your CSS should define classes like .theme-light, .theme-dark, etc., typically setting design tokens via CSS variables.
  */
 
 /**
@@ -34,42 +28,15 @@
 
 // Global style switcher object for simplicity
 const StyleSwitcher = {
-    /**
-     * Default available themes.
-     * @type {string[]}
-     */
     themes: ['light', 'dark'],
-    /**
-     * Currently active theme name.
-     * @type {string}
-     */
     current: 'light',
-    /**
-     * localStorage key used to persist the theme.
-     * @type {string}
-     */
     key: 'site-theme',
-    /**
-     * Element that receives theme-* classes (e.g., theme-light).
-     * document.documentElement is the <html> element.
-     * @type {Element}
-     */
     target: document.documentElement,
-    /**
-     * Registered listeners that run on theme changes.
-     * @type {ThemeChangeCallback[]}
-     */
     callbacks: [],
+    changeCount: 0, // tæller for antal temas skift
 
-    /**
-     * Initialize the style switcher with options and apply the initial theme.
-     * @param {StyleSwitcherOptions} [options] - Configuration.
-     * @returns {typeof StyleSwitcher} This instance for chaining.
-     */
     initStyleSwitcher(options = {}) {
-        // Apply options with fallbacks
         this.target = options.target || document.documentElement;
-        // Guard against invalid target
         if (!(this.target && this.target.classList)) {
             this.target = document.documentElement;
         }
@@ -85,65 +52,33 @@ const StyleSwitcher = {
             if (saved && this.themes.includes(saved)) {
                 this.current = saved;
             }
-        } catch (_) {
-            /* ignore storage errors */
-        }
+        } catch (_) {}
 
-        // Apply theme and build dropdown
         this.applyThemeClass(this.current);
         this.populateDropdown();
-
-        // Prevent FOUC (Flash of Unstyled Content) once the theme is applied
         document.documentElement.setAttribute('data-theme-ready', '1');
 
         return this;
     },
 
-    /**
-     * Populate or update the <select id="theme-select"> with available themes.
-     * If the element does not exist, nothing happens.
-     */
     populateDropdown() {
         const select = document.getElementById('theme-select');
-        if (!select) {
-            // No dropdown present
-            return;
-        }
+        if (!select) return;
 
-        const capitalize = function (s) {
-            return s.charAt(0).toUpperCase() + s.slice(1);
-        };
-
-        // Build options
+        const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
         select.innerHTML = this.themes
             .map((t) => `<option value="${t}">${capitalize(t)}</option>`)
             .join('');
 
-        // Set the current value and hook change event
         select.value = this.current;
         select.onchange = (e) => this.setTheme(e.target.value);
     },
 
-    /**
-     * Apply the given theme by setting a class like `theme-<name>` on the target element.
-     * It first removes all known theme classes, then adds the selected one.
-     * @param {string} theme - The theme to apply.
-     */
     applyThemeClass(theme) {
-        // Remove all known theme classes
-        this.themes.forEach((t) => {
-            this.target.classList.remove(`theme-${t}`);
-        });
-        // Add the new theme class
+        this.themes.forEach((t) => this.target.classList.remove(`theme-${t}`));
         this.target.classList.add(`theme-${theme}`);
     },
 
-    /**
-     * Change the current theme. Updates classes, persists to localStorage,
-     * syncs the dropdown, and notifies listeners.
-     * @param {string} themeName - The theme to set. Must be in `themes`.
-     * @returns {boolean} True if the theme was applied, false if unknown.
-     */
     setTheme(themeName) {
         if (!this.themes.includes(themeName)) {
             console.warn(`Unknown theme: ${themeName}`);
@@ -153,43 +88,30 @@ const StyleSwitcher = {
         this.current = themeName;
         this.applyThemeClass(themeName);
 
-        // Persist selection
         try {
             localStorage.setItem(this.key, themeName);
-        } catch (_) {
-            /* ignore */
-        }
+        } catch (_) {}
 
-        // Sync dropdown if present
         const select = document.getElementById('theme-select');
         if (select && select.value !== themeName) {
             select.value = themeName;
         }
 
-        // Notify listeners (optional feature)
-        this.callbacks.forEach(function (fn) {
-            try {
-                fn(themeName);
-            } catch (_) {
-                /* ignore callback errors */
-            }
+        this.callbacks.forEach((fn) => {
+            try { fn(themeName); } catch (_) {}
         });
+
+        // Tæller og log i konsollen
+        this.changeCount++;
+        console.log(`Temaet er blevet skiftet ${this.changeCount} gange.`);
 
         return true;
     },
 
-    /**
-     * Get the name of the current theme.
-     * @returns {string} Current theme name.
-     */
     getTheme() {
         return this.current;
     },
 
-    /**
-     * Register a callback to be called whenever the theme changes.
-     * @param {ThemeChangeCallback} callback - Function invoked with the new theme.
-     */
     onChange(callback) {
         if (typeof callback === 'function') {
             this.callbacks.push(callback);
@@ -197,5 +119,4 @@ const StyleSwitcher = {
     },
 };
 
-// Expose globally (explicit for clarity)
 window.StyleSwitcher = StyleSwitcher;

@@ -3,6 +3,8 @@
  * Each theme defines a set of CSS variables that are used in base.css
  */
 
+
+
 /* Light theme (default) */
 .theme-light {
     --bg: #fafafa;
@@ -140,4 +142,56 @@
         justify-content: center;
         gap: 1rem;
     }
+}
+
+/* Golden theme */
+.theme-golden {
+    --bg: #d6ba8a;        /* gylden baggrund */
+    --fg: #1f1a14;        /* mørk tekst for kontrast */
+    --muted: #3a352a;     /* afdæmpet tekst */
+    --accent: #d6ba8a;    /* hovedaccent (gylden) */
+    --accent-rgb: 214, 186, 138;
+    --card: #fdf8ef;      /* kort-baggrund, lysere end baggrund */
+    --border: #b89c6b;    /* kantfarve */
+    --font-ui: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --radius: 0.25rem;
+    --shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+/* Knappen “Læg i kurv” og “Køb nu” */
+.theme-golden button,
+.theme-golden .button {
+    background-color: #fffaf0;  /* meget lys gul, næsten hvid */
+    color: #000000;              /* sort tekst */
+    border: 1px solid #e0d4a1;  /* subtil gylden kant */
+    border-radius: 6px;
+    padding: 0.7rem 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.theme-golden button:hover,
+.theme-golden .button:hover {
+    background-color: #fff2c8;  /* lidt mere gul ved hover */
+    color: #000000;
+}
+
+/* Tag hover */
+.theme-golden .tag:hover {
+    border-color: var(--accent);
+}
+
+/* Baggrund og tekst */
+.theme-golden body {
+    background-color: var(--bg);
+    color: var(--fg);
+}
+
+/* Kort baggrund */
+.theme-golden .product-card,
+.theme-golden .card {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
 }

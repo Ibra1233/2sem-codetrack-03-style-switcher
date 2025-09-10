@@ -16,7 +16,153 @@
             --accent-rgb: 37, 99, 235;
             --card: #ffffff;
             --border: #e5e7eb;
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="icon" href="favicon.png" type="image/png">
+        <title>Style Switcher - Minimal Example</title>
+        <link rel="stylesheet" href="css/base.css">
+        <link rel="stylesheet" href="css/theme-switcher.css">
+        <style>
+        .theme-light {
+            --bg: #fafafa;
+            --fg: #1f2937;
+            --muted: #6b7280;
+            --accent: #2563eb;
+            --accent-rgb: 37, 99, 235;
+            --card: #ffffff;
+            --border: #e5e7eb;
             --font-ui: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --radius: 0.25rem;
+            --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+            .button {
+                background: transparent;
+                color: var(--accent);
+                border: 2px solid rgba(var(--accent-rgb), 0.6);
+                box-shadow: none;
+            }
+
+            .button:hover {
+                background: rgba(var(--accent-rgb), 0.08);
+                transform: translateY(-1px);
+                filter: none;
+            }
+
+            .button:active {
+                background: rgba(var(--accent-rgb), 0.16);
+                transform: translateY(0);
+            }
+        }
+
+            .theme-dark {
+                --bg: #0b1020;
+                --fg: #e5e7eb;
+                --muted: #94a3b8;
+                --accent: #7c3aed;
+                --accent-rgb: 124, 58, 237;
+                --card: #111827;
+                --border: #1f2937;
+                --font-ui: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                --radius: 0.25rem;
+                --shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+                .button {
+                    border: 0;
+                    box-shadow: 0 0 0 2px rgba(var(--accent-rgb), 0.25), 0 6px 18px rgba(0, 0, 0, 0.5);
+                }
+
+                .button:hover {
+                    transform: translateY(-1px) scale(1.01);
+                    box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.35), 0 8px 22px rgba(0, 0, 0, 0.55);
+                }
+
+                .button:active {
+                    transform: translateY(0) scale(0.99);
+                }
+            }
+
+            .theme-retro {
+                --bg: #f7f1e3;
+                --fg: #2d2a26;
+                --muted: #6d655d;
+                --accent: #ff6b6b;
+                --accent-rgb: 255, 107, 107;
+                --card: #fffaf0;
+                --border: #e5dcc6;
+                --font-ui: "Courier New", ui-monospace, monospace;
+                --radius: 0rem;
+                --shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
+
+                .button {
+                    border: 2px solid #000000;
+                    box-shadow: 2px 2px 0 #000000;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                }
+
+                .button:hover {
+                    transform: translate(-1px, -1px);
+                    box-shadow: 3px 3px 0 #000000;
+                }
+
+                .button:active {
+                    transform: translate(0, 0);
+                    box-shadow: 2px 2px 0 #000000;
+                }
+            }
+    </style>
+</head>
+<body>
+<!-- Top bar for the style switcher -->
+<div class="top-bar">
+    <div class="top-bar-content">
+        <div class="site-title">
+            <h1>Style Switcher Demo</h1>
+        </div>
+        <nav class="example-links">
+            <a href="index.html">Full example</a>
+            <a href="minimal.html">Minimal example</a>
+        </nav>
+        <div class="theme-switcher-wrapper">
+            <!-- Simplified theme switcher with just the dropdown -->
+            <div class="theme-switcher">
+                <select id="theme-select" class="theme-select" aria-label="Select theme">
+                    <!-- Options will be populated by JavaScript -->
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main content area -->
+<div class="custom-alert">
+    Dette er en alert-boks! Skift tema for at se farven ændre sig.
+</div>
+<main class="content-area">
+    <div class="card">
+        <h2>Minimal Example</h2>
+        <p class="muted">Use the dropdown above to switch theme. Your choice is saved.</p>
+        <button class="button">Primary action</button>
+    </div>
+</main>
+
+<script src="js/style-switcher.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        StyleSwitcher.initStyleSwitcher({
+            target: document.documentElement,
+            key: 'site-theme',
+            defaultTheme: 'light',
+            themes: ['light', 'dark', 'retro'],
+        });
+    });
+</script>
+</body>
+</html>
+--font-ui: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             --radius: 0.25rem;
             --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
@@ -135,7 +281,7 @@
                 target: document.documentElement,
                 key: 'site-theme',
                 defaultTheme: 'light',
-                themes: ['light', 'dark', 'retro'],
+                themes: ['light', 'dark', 'retro', 'golden'],
             });
         });
     </script>
